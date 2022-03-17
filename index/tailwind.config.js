@@ -17,8 +17,7 @@ module.exports = {
         },
         minWidth: {
             160: '9.3rem',
-        }
+        },
     },
     plugins: [],
 };
-//'#cea600',
