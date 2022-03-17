@@ -1,0 +1,28 @@
+{
+    "data": [{
+            "id": 0,
+            "size": "XS",
+            "available": false,
+            "last": false
+        },
+        {
+            "id": 1,
+            "size": "S",
+            "available": true,
+            "last": true
+        },
+        {
+            "id": 2,
+            "size": "M",
+            "available": true,
+            "last": false
+        },
+        {
+            "id": 3,
+            "size": "XL",
+            "available": true,
+            "last": false
+        }
+
+    ]
+}

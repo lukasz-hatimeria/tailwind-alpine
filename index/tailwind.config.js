@@ -5,6 +5,7 @@ module.exports = {
         colors: {
             'my-yellow': '#cea600',
             'my-grey': 'rgba(38, 38, 38, 0.61)',
+            'my-light-grey': 'rgba(207, 207, 207, 0.7)',
             'my-white': '#ffffff',
         },
         minHeight: {
@@ -16,12 +17,14 @@ module.exports = {
             200: '12.5rem',
         },
         minWidth: {
-            50: '9.1rem',
-            160: '9.3rem',
+            50: '3.1rem',
+            150: '9.3rem',
+            250: '12.6rem',
             600: '38rem'
         },
         maxWidth: {
-            50: '38rem',
+            150: '9.3rem',
+            250: '12.6rem',
             600: '38rem'
         },
     },
