@@ -1,86 +1,105 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
 
-  <link href="../dist/output.css" rel="stylesheet" />
-  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js">
-    async function getLabel() {
-      let response = await fetch('https://fakestoreapi.com/products/1')
-      let responeJson = response.json();
-      console.log(responeJson)
-      return await response.text()
-    }
-  </script>
+    <link href="../dist/output.css" rel="stylesheet" />
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js">
+        async function getLabel() {
+            let response = await fetch('https://fakestoreapi.com/products/1')
+            let responeJson = response.json();
+            console.log(responeJson)
+            return await response.text()
+        }
+    </script>
 
-  <style>
-    .container {
-      min-width: 640px;
-      min-height: 700px;
-      padding: 40px;
-    }
-  </style>
+    <style>
+        .container {
+            min-width: 640px;
+            min-height: 700px;
+            padding: 40px;
+        }
+    </style>
 </head>
 
 <body>
-  <div x-data="{actives:{activeOne: 0, activeTwo: 1, activeThree: 2},perSlide:1, fetchedProducts: null}" x-init="(async () => {
-    const response = await fetch('https://fakestoreapi.com/products?limit=6')
-    if (! response.ok) 
-      alert(`Something went wrong: ${response.status} - ${response.statusText}`)
-    fetchedProducts = await response.json()
-               })()">
-    <template x-if="fetchedProducts !== null">
+    <div x-data="manageItems()" x-init="getProducts()">
+        <template x-if="fetchedProducts !== null">
       <div>
-        <p x-text="fetchedProducts[actives.activeOne].title">1</p>
-        <p x-text="fetchedProducts[actives.activeTwo].title">2</p>
-        <p x-text="fetchedProducts[actives.activeThree].title">3</p>
-      </template>
-      <button 
-      class="bg-teal-100 text-teal-500 hover:text-orange-500 font-bold border-2"
-      x-on:click="remove(actives,fetchedProducts,perSlide)">
+        <template x-for="product in slicedProducts">
+          <p x-text="product.title">1</p>
+        </template>
+        </template>
+        <button class="bg-teal-100 text-teal-500 hover:text-orange-500 font-bold border-2" x-on:click="remove()">
       Remove
     </button>
-      <button 
-      class="bg-teal-100 text-teal-500 hover:text-orange-500 font-bold border-2"
-      x-on:click="add(actives,fetchedProducts,perSlide)">
+        <button class="bg-teal-100 text-teal-500 hover:text-orange-500 font-bold border-2" x-on:click="add()">
       Add
     </button>
-    <button 
-    class="bg-teal-100 text-teal-500 hover:text-orange-500 font-bold border-2"
-    x-on:click="perSlide = perSlide === 1 ? 3 : 1 "
-   >
-   Amount per slide <span x-text ="perSlide"></span>
-    
-  </button>
-      <div class="mt-6">
-        <template  x-for="item in fetchedProducts">
-          <p x-text="item.title">
-          </p>
+        <button class="bg-teal-100 text-teal-500 hover:text-orange-500 font-bold border-2" x-on:click="perSlide = perSlide === 1 ? 3 : 1 ">
+      Amount per slide <span x-text="perSlide"></span>
+
+    </button>
+        <span x-text="productIndex"></span>
+        <div class="mt-6">
+            <template x-for="item in fetchedProducts">
+        <p x-text="item.title">
+        </p>
       </template>
-      </div>
-   
+        </div>
+
     </div>
     <br>
-  </div>
+    </div>
 </body>
 <script>
-  function add(actives,fetchedProducts,perSlide){
-    if(actives.activeThree <5){
-      actives.activeOne += perSlide
-      actives.activeTwo += perSlide
-      actives.activeThree += perSlide
-    }
+    function manageItems() {
+        return {
+            productIndex: 0,
+            perSlide: 1,
+            fetchedProducts: null,
+            slicedProducts: null,
+            add() {
+                if (this.productIndex < 3) {
+                    this.productIndex += this.perSlide;
+                }
+                if (this.productIndex >= 3) {
+                    this.productIndex = 3
+                    this.slicedProducts = this.fetchedProducts.slice(3, 6)
+                } else {
+                    this.slicedProducts = this.fetchedProducts.slice(this.productIndex, this.productIndex + 3)
+                }
 
-  }
-  function remove(actives,fetchedProducts,perSlide){
-    if(actives.activeOne >0){
-      actives.activeOne -= perSlide
-      actives.activeTwo -= perSlide
-      actives.activeThree -= perSlide
+            },
+            remove() {
+                if (this.productIndex > 0) {
+                    this.productIndex -= this.perSlide
+                }
+                if (this.productIndex <= 2 && this.perSlide === 3) {
+                    this.productIndex = 0
+                    this.slicedProducts = this.fetchedProducts.slice(0, 3)
+                } else {
+                    this.slicedProducts = this.fetchedProducts.slice(this.productIndex, this.productIndex + 3)
+                }
+
+            },
+            getProducts() {
+                (async() => {
+                    const response = await fetch('https://fakestoreapi.com/products?limit=6')
+                    if (!response.ok)
+                        alert(`Something went wrong: ${response.status} - ${response.statusText}`)
+                    this.fetchedProducts = await response.json()
+                    this.slicedProducts = this.fetchedProducts.slice(0, 3)
+                    console.log('co')
+                })()
+
+
+            }
+        }
     }
-  }
 </script>
+
 </html>
