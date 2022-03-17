@@ -16,7 +16,13 @@ module.exports = {
             200: '12.5rem',
         },
         minWidth: {
+            50: '9.1rem',
             160: '9.3rem',
+            600: '38rem'
+        },
+        maxWidth: {
+            50: '38rem',
+            600: '38rem'
         },
     },
     plugins: [],
